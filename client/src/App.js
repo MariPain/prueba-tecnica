@@ -1,15 +1,25 @@
-import logo from './logo.svg';
 import './App.css';
+import Header from './Components/Header';
+import Main from './Components/Main';
+import Footer from './Components/Footer';
+import Nav from './Components/Nav';
+
+import DataTable from './Components/DataTable';
+
 
 function App() {
 
 
   return (
     <div className="App">
-      <h1>  LA TIENDA REACTIVA</h1>
-      <h2>rutas
-        
-      </h2>
+    <Header/>
+    <Nav/>
+    <Main/>
+    <DataTable/>  
+   
+
+    <Footer/>
+
   
     </div>
   );
