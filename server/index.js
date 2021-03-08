@@ -1,45 +1,51 @@
+
+const express = require('express');
+const bodyParser =require ('body-parser');
 const mongoose =require('mongoose');
-const app = require ('./app');
-const PORT = process.env.PORT || 3000;
-const {API_VERSION, IP_SERVER, PORT_DB} = require('./config');
-const productsSchema = require('./models/productsSchema');
+const routes = require('./routes');
+const cors = require('cors');
+
+// crear el servidor
+const app = express();
+
+// Habilitar Cors
+app.use(cors());
 
 
-const bdConnection = require('./connectionDb');
-const bdSchema = require('./models/productsSchema');
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
 
-const productobd = new productsSchema({
-    name: 'platano',
-    description:'platano canario',
-    price:'99',
-    maker : {
-        name: 'fabricante de platanos',
-        cif:"Q7627221J",
-        adress:''
-    }
+//Conectar con Mongo
+
+mongoose.Promise = global.Promise;
+mongoose.connect('mongodb://localhost:27017/tienda-online', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false
 });
-// productobd.save();
+
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:')); 
+db.once('open', () => {
+  console.log('Conexion a BBDD correcta');
+
+});
 
 
+//Router no está funcioonando bien, dejo este de prueba:
+
+// app.get('/', function(req, res) {
+//     console.log("Se ha realizado una petición GET para / ");
+//     res.send('Página de listado de usuarios');
+
+// });
+//...
+
+app.use('/', routes())
+app.listen(4000, () => {
+    console.log('Servidor funcionando en el puerto 4000')
+})
 
 
-
-////----REVISA TODO ESTE CODIGO COMENTADO-----
-mongoose.connect(`mongobd://${IP_SERVER}:${PORT_DB}/productos`,
-{useNewUrlParser: true, useFindAndModify: true, useUnifiedTopology: true}
-//, (err, res)=>{
-//     if(err)throw err;
-//     
-//         console.log('conexión base de datos correcta.');
-//         app.listen(port, ()=> {
-//             console.log('####################');
-//             console.log('#### API REST ####');
-//             console.log('####################');
-//             console.log(`http://${IP_SERVER}:${PORT}/api/${API_VERSION}`)
-
-//                 })
-//             }
-// }
-);
 
 
